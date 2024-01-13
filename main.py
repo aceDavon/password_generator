@@ -1,3 +1,4 @@
+import json
 from tkinter import *
 from tkinter import messagebox
 from random import randint, choice, shuffle
@@ -25,25 +26,35 @@ def generate_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_password():
-    site = webInput.get().strip()
+    website = webInput.get().strip().title()
     username_data = userInput.get().strip()
     password_data = passInput.get().strip()
     new_data = {
-        site: {
-            username: username_data,
-            password: password_data,
+        website: {
+            "username": username_data,
+            "password": password_data,
         }
     }
 
-    if not site or not password_data:
+    if not website or not password_data:
         messagebox.showerror(title="Validation failed", message="Please fill in both website and password fields")
     else:
-        is_ok = messagebox.askokcancel(title=site, message=f"Please confirm:\nEmail: {username_data}\nWebsite: {website_data}\nPassword: {password_data}\nIs it ok to save?")
-        if is_ok:
-            with open("data.txt", mode="a") as file:
-                file.write(f"Website: {site} | Username: {username_data} | Password: {password_data}\n")
+        try:
+            with open("data.json") as file:
+                data = json.load(file)
+        except FileNotFoundError as error:
+            with open("data.json", "w") as file:
+                json.dump(new_data, file, indent=4)
+        else:
+            with open("data.json", "w") as file:
+                data.update(new_data)
+                json.dump(data, file, indent=4)  # Correct the order of arguments
+        finally:
             webInput.delete(0, END)
             passInput.delete(0, END)
+
+# ---------------------------- UI SETUP ------------------------------- #
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -58,9 +69,9 @@ canvas.create_image(110, 110, image=photo_img)
 canvas.grid(column=1, row=0)
 
 website = Label(text="Website", font=("Times New Roman", 14))
-webInput = Entry(width=35)
+webInput = Entry(width=21)
 website.grid(column=0, row=1)
-webInput.grid(column=1, row=1, columnspan=2)
+webInput.grid(column=1, row=1)
 
 username = Label(text="Username/Email", font=("Times New Roman", 14))
 userInput = Entry(width=35)
@@ -74,6 +85,8 @@ password.grid(column=0, row=3)
 passInput.grid(column=1, row=3)
 pswGenerate.grid(column=2, row=3)
 
+search_btn = Button(text="Search", width=10)
+search_btn.grid(row=1, column=2)
 addBtn = Button(width=33, text="Add", command=save_password)
 addBtn.grid(column=1, row=4, columnspan=2)
 window.mainloop()
