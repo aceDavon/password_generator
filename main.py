@@ -56,6 +56,21 @@ def save_password():
 # ---------------------------- UI SETUP ------------------------------- #
 
 
+def find_password():
+    search_str = webInput.get().strip().title()
+    try:
+        with open("data.json") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        messagebox.showerror(title="404", message="No Data found")
+    else:
+        if search_str in data:
+            email = data[search_str]["username"]
+            password = data[search_str]["password"]
+            messagebox.showinfo(title=email, message=f"Email: {email} \n Password: {password}")
+        else:
+            messagebox.showerror(title="404", message="No Data found for that site")
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 
@@ -85,7 +100,7 @@ password.grid(column=0, row=3)
 passInput.grid(column=1, row=3)
 pswGenerate.grid(column=2, row=3)
 
-search_btn = Button(text="Search", width=10)
+search_btn = Button(text="Search", width=10, command=find_password)
 search_btn.grid(row=1, column=2)
 addBtn = Button(width=33, text="Add", command=save_password)
 addBtn.grid(column=1, row=4, columnspan=2)
