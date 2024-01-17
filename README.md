@@ -1,6 +1,6 @@
 ## Password Manager
 
-![Password Manager Logo]("logo.png")
+![Password Manager Logo](logo.png)
 
 > A GUI application for managing user password and username inputs per visited site. The user enters the site name and their username chosen for the website, either enters the desired password if any or allows the app auto generate a random strong password and the copy the generated password to clip board and proceed to save the password locally on the user computer. The app allows for searching it's database for websites password saved subsequently and does include error handling and feedback for different errors that are encountered due to user errors.
 
